@@ -1,0 +1,9 @@
+spring:
+   application:
+      name: producer-service
+   cloud:
+      config:
+         uri: http://localhost:8088   
+         
+   
+   

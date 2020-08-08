@@ -1,6 +1,7 @@
 package com.ds.springconsumer.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -15,13 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.ds.springconsumer.model.Employee;
+import com.ds.springconsumer.proxyservice.EmployeeProducerProxy;
+
 @RestController
 public class ConsumerControllerClient {
 
 	@Autowired
 	private LoadBalancerClient loadBalancer;
 
-	@GetMapping(value ="/getAll")
+	@Autowired
+	private EmployeeProducerProxy employeeProducerProxy;
+
+	@GetMapping(value = "/getAll")
 	public void getEmployee() throws RestClientException, IOException {
 
 		ServiceInstance serviceInstance = loadBalancer.choose("producer-service");
@@ -46,5 +53,19 @@ public class ConsumerControllerClient {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		return new HttpEntity<>(headers);
+	}
+
+	@GetMapping(value = "/getAllEmp")
+	public void getAllEmp() throws RestClientException, IOException {
+		List<Employee> empList = employeeProducerProxy.finAllEmp();
+
+		System.out.println("=====empList====" + empList);
+	}
+	
+	@GetMapping(value = "/getEmpInfo")
+	public void getEmpInfo() throws RestClientException, IOException {
+		String empInfo = employeeProducerProxy.getEmpInfo();
+
+		System.out.println("=====emp Info using Feign client====" + empInfo);
 	}
 }

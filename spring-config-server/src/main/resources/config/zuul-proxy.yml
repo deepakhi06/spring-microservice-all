@@ -15,5 +15,5 @@ zuul:
       path: /producer/**
       serviceId: producer-service
     consumer:
-      path: /cosnumer/**
+      path: /consumer/**
       serviceId: consumer-service
